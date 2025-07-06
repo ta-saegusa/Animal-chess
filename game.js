@@ -134,4 +134,85 @@ function move(sx, sy, dx, dy) {
   let piece = board[sy][sx];
   const target = board[dy][dx];
 
-  if (
+  if (target) {
+    if (target.type === 'ら') {
+      if (piece.owner === 1) {
+        statusEl.textContent = 'あなたのかち！（らいおんをとったよ）';
+      } else {
+        statusEl.textContent = 'ＣＰＵのかち！（らいおんをとられたよ）';
+      }
+      turn.player = 0;
+      return;
+    }
+    captured[piece.owner].push(target.type === 'に' ? 'ひ' : target.type);
+  }
+
+  if (piece.type === 'ひ') {
+    if (piece.owner === 1 && dy === 0) piece = { type: 'に', owner: 1 };
+    if (piece.owner === 2 && dy === 3) piece = { type: 'に', owner: 2 };
+  }
+
+  board[dy][dx] = piece;
+  board[sy][sx] = null;
+
+  render();
+  checkGameOver();
+}
+
+function cpuMove() {
+  if (turn.player !== 2) return;
+
+  const moves = [];
+  board.forEach((row, y) => row.forEach((cell, x) => {
+    if (cell && cell.owner === 2) {
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx, ny = y + dy;
+          if (nx < 0 || nx >= 3 || ny < 0 || ny >= 4) continue;
+          if (isValidMove(x, y, nx, ny, 2)) {
+            moves.push({ sx: x, sy: y, dx: nx, dy: ny });
+          }
+        }
+      }
+    }
+  }));
+
+  let moveToPlay;
+  if (currentDifficulty === 'hard') {
+    moveToPlay = moves.find(m => {
+      const target = board[m.dy][m.dx];
+      return target && target.owner === 1;
+    }) || moves[Math.floor(Math.random() * moves.length)];
+  } else {
+    moveToPlay = moves[Math.floor(Math.random() * moves.length)];
+  }
+
+  if (moveToPlay) {
+    move(moveToPlay.sx, moveToPlay.sy, moveToPlay.dx, moveToPlay.dy);
+    if (turn.player === 0) return;
+    turn.player = 1;
+    statusEl.textContent = 'あなたのばんだよ';
+  } else {
+    statusEl.textContent = 'ＣＰＵはうごけないよ。あなたのかち！';
+    turn.player = 0;
+  }
+}
+
+function checkGameOver() {
+  let playerLion = false, cpuLion = false;
+
+  board.forEach(row => row.forEach(cell => {
+    if (cell && cell.type === 'ら') {
+      if (cell.owner === 1) playerLion = true;
+      if (cell.owner === 2) cpuLion = true;
+    }
+  }));
+
+  if (!cpuLion) {
+    statusEl.textContent = 'あなたのかち！（らいおんをとったよ）';
+    turn.player = 0;
+  } else if (!playerLion) {
+    statusEl.textContent = 'ＣＰＵのかち！（らいおんをとられたよ）';
+    turn.player = 0;
+  }
+}
