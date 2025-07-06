@@ -15,6 +15,7 @@ function startGame(difficulty) {
   currentDifficulty = difficulty;
   document.getElementById('difficulty').style.display = 'none';
   document.getElementById('reset').style.display = 'inline-block';
+  document.getElementById('continue').style.display = 'none';
 
   const levelText = (difficulty === 'easy') ? 'かんたん' : 'むずかしい';
   levelEl.textContent = `いまのなんいど: ${levelText}`;
@@ -22,8 +23,34 @@ function startGame(difficulty) {
   initGame();
 }
 
-function resetGame() {
+function continueGame() {
+  document.getElementById('difficulty').style.display = 'none';
+  document.getElementById('reset').style.display = 'inline-block';
+  document.getElementById('continue').style.display = 'none';
+
+  const levelText = (currentDifficulty === 'easy') ? 'かんたん' : 'むずかしい';
+  levelEl.textContent = `いまのなんいど: ${levelText}`;
+
   initGame();
+}
+
+function resetGame() {
+  document.getElementById('difficulty').style.display = 'block';
+  document.getElementById('reset').style.display = 'none';
+  document.getElementById('continue').style.display = 'inline-block';
+
+  levelEl.textContent = `いまのなんいど: ${currentDifficulty === 'easy' ? 'かんたん' : 'むずかしい'}`;
+  statusEl.textContent = 'なんいどをえらぶか、「つづける」をおしてね';
+
+  boardEl.innerHTML = '';
+  playerHandEl.innerHTML = '';
+  cpuHandEl.innerHTML = '';
+
+  board = null;
+  captured = null;
+  turn = null;
+  selected = null;
+  dropPiece = null;
 }
 
 function initGame() {
