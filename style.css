@@ -1,32 +1,6 @@
 body {
   font-family: sans-serif;
   text-align: center;
-  margin: 0; padding: 0;
-  background: #f0f0f0;
-}
-
-h1 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-#status {
-  font-size: 18px;
-  margin-bottom: 10px;
-  min-height: 24px;
-  color: #555;
-}
-
-.hands {
-  margin-bottom: 10px;
-  font-size: 20px;
-}
-
-.hands span {
-  display: inline-block;
-  margin: 0 5px;
-  cursor: pointer;
 }
 
 .board {
@@ -34,31 +8,38 @@ h1 {
   grid-template-columns: repeat(3, 60px);
   grid-template-rows: repeat(4, 60px);
   gap: 2px;
-  margin: 0 auto 20px;
-  width: max-content;
-  background: #ccc;
-  padding: 4px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin: 10px auto;
 }
 
 .cell {
+  width: 60px;
+  height: 60px;
   background: #fff;
-  border: 1px solid #999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
+  border: 1px solid #000;
+  font-size: 32px;
+  line-height: 60px;
+  text-align: center;
+  position: relative;
   cursor: pointer;
-  user-select: none;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.cell:hover {
-  background-color: #ddf;
 }
 
 .cpu {
   transform: rotate(180deg);
+  background-color: #eef;
+}
+
+.hands {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+}
+
+#difficulty {
+  margin-bottom: 10px;
+}
+
+#difficulty button, #reset {
+  margin: 0 5px;
+  padding: 5px 10px;
+  font-size: 16px;
 }

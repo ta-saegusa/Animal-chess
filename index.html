@@ -9,14 +9,22 @@
 <body>
 <h1>どうぶつしょうぎ</h1>
 
-<div id="status">あなたの番です</div>
+<div id="status">なんいどをえらんでね</div>
+<div id="current-level">いまのなんいど: なし</div>
+
+<div id="difficulty">
+  <button onclick="startGame('easy')">かんたん</button>
+  <button onclick="startGame('hard')">むずかしい</button>
+</div>
 
 <div class="hands">
-  <div>あなたの持ち駒: <span id="player-hand"></span></div>
-  <div>CPUの持ち駒: <span id="cpu-hand"></span></div>
+  <div>あなたのもちごま: <span id="player-hand"></span></div>
+  <div>ＣＰＵのもちごま: <span id="cpu-hand"></span></div>
 </div>
 
 <div class="board" id="board"></div>
+
+<button id="reset" onclick="resetGame()" style="display:none;">りせっと</button>
 
 <script src="game.js"></script>
 </body>
