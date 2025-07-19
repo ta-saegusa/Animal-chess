@@ -205,12 +205,21 @@ function cpuMove() {
   }));
 
   let moveToPlay;
+
   if (currentDifficulty === 'hard') {
-    moveToPlay = moves.find(m => {
-      const target = board[m.dy][m.dx];
-      return target && target.owner === 1;
-    }) || moves[Math.floor(Math.random() * moves.length)];
+    let bestScore = -Infinity;
+
+    moves.forEach(m => {
+      const simulated = simulateMove(board, m);
+      const score = evaluateBoard(simulated);
+      if (score > bestScore) {
+        bestScore = score;
+        moveToPlay = m;
+      }
+    });
+
   } else {
+    // easy: ランダム
     moveToPlay = moves[Math.floor(Math.random() * moves.length)];
   }
 
@@ -243,3 +252,48 @@ function checkGameOver() {
     turn.player = 0;
   }
 }
+
+function simulateMove(originalBoard, move) {
+  const newBoard = originalBoard.map(row => row.map(cell => {
+    return cell ? { ...cell } : null;
+  }));
+
+  const piece = newBoard[move.sy][move.sx];
+  const target = newBoard[move.dx][move.dy];
+
+  // ひよこ成りチェック
+  let newPiece = { ...piece };
+  if (piece.type === 'ひ') {
+    if (piece.owner === 2 && move.dy === 3) {
+      newPiece.type = 'に';
+    }
+  }
+
+  newBoard[move.dx][move.dy] = newPiece;
+  newBoard[move.sy][move.sx] = null;
+
+  return newBoard;
+}
+
+function evaluateBoard(b) {
+  let score = 0;
+
+  b.forEach(row => row.forEach(cell => {
+    if (!cell) return;
+
+    let value = 0;
+    switch (cell.type) {
+      case 'ら': value = 1000; break;
+      case 'ぞ': value = 3; break;
+      case 'き': value = 3; break;
+      case 'に': value = 2; break;
+      case 'ひ': value = 1; break;
+    }
+
+    if (cell.owner === 2) score += value;
+    else score -= value;
+  }));
+
+  return score;
+}
+
